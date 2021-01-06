@@ -13,30 +13,33 @@ const App = {
   },
   methods: {
     prev() {
-      if (this.activeIndex > 0) {
-        this.activeIndex -= 1
-      }
+      this.activeIndex--
     },
     nextOrFinish() {
-      if (this.isLastStep) {
-        this.activeIndex = 0
-      } else {
-        this.activeIndex += 1
-      }
+      this.activeIndex++
     },
     setActive(idx) {
       this.activeIndex = idx
+    },
+    reset() {
+      this.activeIndex = 0
     }
   },
   computed: {
-    currentStep() {
-      return this.activeIndex
+    currentText() {
+      const index = this.isLastStep ?
+        this.activeIndex - 1 :
+        this.activeIndex
+      return this.steps[index].text
     },
     isPrevBtnDisabled() {
       return !this.activeIndex
     },
     isLastStep() {
-      return this.currentStep === this.steps.length
+      return this.activeIndex === this.steps.length
+    },
+    isLastTextStep() {
+      return this.activeIndex === this.steps.length - 1
     }
   }
 }
