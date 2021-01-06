@@ -20,7 +20,7 @@
               :class="['steps-item', {'active': currentStep === idx}, {'done': currentStep > idx}]"
               @click="setActive(idx)"
           >
-            <span>{{ idx + 1 }}</span> Шаг {{ idx + 1}}</li>
+            <span>{{ idx + 1 }}</span> {{ steps[idx].title }}</li>
         </ul>
         <div>
           <button
