@@ -32,7 +32,7 @@
               class="btn primary"
               @click="nextOrFinish"
               v-if="!isLastStep"
-          >{{ isLastStep ? 'Закончить' : 'Вперед' }}</button>
+          >{{ currentStep === steps.length - 1 ? 'Закончить' : 'Вперед' }}</button>
         </div>
       </div>
     </div>
