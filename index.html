@@ -17,22 +17,22 @@
         <ul class="steps-list">
           <li
               v-for="(_, idx) in steps"
-              :class="['steps-item', {'active': this.activeIndex === idx}, {'done': this.activeIndex > idx}]"
-              @click="setActive(idx)"
+              :class="['steps-item', {'active': this.activeIndex === idx && !isFinish}, {'done': this.activeIndex > idx || isFinish}]"
+              @click="!isFinish ? setActive(idx) : ''"
           >
             <span>{{ idx + 1 }}</span> {{ steps[idx].title }}</li>
         </ul>
         <div>
           <button
               class="btn"
-              @click="isLastStep ? reset() : prev()"
+              @click="isFinish ? reset() : prev()"
               :disabled="isPrevBtnDisabled"
-          >{{ isLastStep ? 'Начать заново' : 'Назад' }}</button>
+          >{{ isFinish ? 'Начать заново' : 'Назад' }}</button>
           <button
               class="btn primary"
               @click="nextOrFinish"
-              v-if="!isLastStep"
-          >{{ isLastTextStep ? 'Закончить' : 'Вперед' }}</button>
+              v-if="!isFinish"
+          >{{ isLastStep ? 'Закончить' : 'Вперед' }}</button>
         </div>
       </div>
     </div>
