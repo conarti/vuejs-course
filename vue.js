@@ -14,7 +14,9 @@ const App = {
   },
   methods: {
     prev() {
-      this.activeIndex--
+      if (this.activeIndex > 0) {
+        this.activeIndex--
+      }
     },
     nextOrFinish() {
       if (this.isLastStep) {
