@@ -26,7 +26,9 @@ const App = {
       }
     },
     setActive(idx) {
-      this.activeIndex = idx
+      if (!this.isFinish) {
+        this.activeIndex = idx
+      }
     },
     reset() {
       this.isFinish = false
