@@ -1,70 +1,130 @@
 <template>
   <div class="container column">
-    <form class="card card-w30">
-      <div class="form-control">
-        <label for="type">Тип блока</label>
-        <select id="type">
-          <option value="title">Заголовок</option>
-          <option value="subtitle">Подзаголовок</option>
-          <option value="avatar">Аватар</option>
-          <option value="text">Текст</option>
-        </select>
-      </div>
-
-      <div class="form-control">
-        <label for="value">Значение</label>
-        <textarea id="value" rows="3"></textarea>
-      </div>
-
-      <button class="btn primary">Добавить</button>
-    </form>
-
-    <div class="card card-w70">
-      <h1>Резюме Nickname</h1>
-      <div class="avatar">
-        <img alt="" src="https://cdn.dribbble.com/users/5592443/screenshots/14279501/drbl_pop_r_m_rick_4x.png">
-      </div>
-      <h2>Опыт работы</h2>
-      <p>
-        главный герой американского мультсериала «Рик и Морти», гениальный учёный, изобретатель, атеист (хотя в некоторых сериях он даже молится Богу, однако, каждый раз после чудесного спасения ссылается на удачу и вновь отвергает его существование), алкоголик, социопат, дедушка Морти. На момент начала третьего сезона ему 70 лет[1]. Рик боится пиратов, а его главной слабостью является некий - "Санчезиум". Исходя из того, что существует неограниченное количество вселенных, существует неограниченное количество Риков, герой сериала предположительно принадлежит к измерению С-137. В серии комикcов Рик относится к измерению C-132, а в игре «Pocket Mortys» — к измерению C-123[2]. Прототипом Рика Санчеза является Эмметт Браун, герой кинотрилогии «Назад в будущее»[3].
-      </p>
-      <h3>Добавьте первый блок, чтобы увидеть результат</h3>
-    </div>
+    <AppForm
+        :input="inputValue"
+        :value-type="type"
+        @form="change"
+    />
+    <AppContent />
   </div>
   <div class="container">
-    <p>
-      <button class="btn primary">Загрузить комментарии</button>
-    </p>
-    <div class="card">
-      <h2>Комментарии</h2>
-      <ul class="list">
-        <li class="list-item">
-          <div>
-            <p><strong>test@microsoft.com</strong></p>
-            <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi, reiciendis.</small>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <div class="loader"></div>
+    <AppComments />
   </div>
 </template>
 
 <script>
-export default {
+import AppForm from '@/AppForm'
+import AppContent from '@/AppContent'
+import AppComments from '@/AppComments'
 
+export default {
+  data() {
+    return {
+      inputValue: '',
+      type: 'title',
+      content: {
+        title: 'Evan You',
+        link: 'https://pbs.twimg.com/profile_images/1206997998900850688/cTXTQiHm_400x400.jpg',
+        sections: [
+          {
+            title: 'About',
+            text:
+                'Husband, father of two, independent open source developer. Creator / project lead of @vuejs and connoisseur of sushi.',
+            id: 'qwkewqlskdadiwpqo'
+          },
+          {
+            title: 'Vue.js',
+            text: 'Progressive JavaScript framework for building modern web interfaces. Created by @youyuxi, maintained by http://vuejs.org/v2/guide/team.',
+            id: 'sadasldsakdlas'
+          },
+          {
+            title: 'Nuxt.js',
+            text: 'The Intuitive Web Framework for building modern apps & websites with Vue.js.',
+            id: 'pwqpeqwowoeqi'
+          }
+        ]
+      },
+    }
+  },
+  methods: {
+    change(value, type) {
+      switch(type) {
+        case 'title':
+          this.content.title = value
+          break
+        case 'avatar':
+          this.content.link = value
+          break
+        default:
+          this.editContent(type, value)
+          break
+      }
+      this.inputValue = ''
+      this.type = 'title'
+    },
+    editContent(type, value) {
+      const sections = this.content.sections
+
+      if (canEdit(type)) {
+        editSection(type, value)
+      } else {
+        addSection(type, value)
+      }
+
+      function getEditableSection() {
+        const sectionIdx = sections.findIndex(item => !(item.hasOwnProperty('title') && item.hasOwnProperty('text')))
+        if (sectionIdx >= 0) {
+          return sections[sectionIdx]
+        }
+      }
+
+      function canEdit(type) {
+        const target = getEditableSection(sections)
+        if (target) {
+          const property = type === 'subtitle' ? 'title' : 'text'
+          return !target.hasOwnProperty(property)
+        } else {
+          return false
+        }
+      }
+
+      function editSection(type, value) {
+        const target = getEditableSection(sections)
+        switch(type) {
+          case 'subtitle':
+            target.title = value
+            break
+          case 'text':
+            target.text = value
+            break
+        }
+      }
+
+      function addSection(type, value) {
+        const newSection = {}
+        switch (type) {
+          case 'subtitle':
+            newSection.title = value
+            break
+          case 'text':
+            newSection.text = value
+            break
+        }
+        newSection.id = generateID()
+        sections.push(newSection)
+      }
+
+    }
+  },
+  provide() {
+    return {
+      content: this.content
+    }
+  },
+  components: { AppForm, AppContent, AppComments }
+}
+
+function generateID() {
+  return Math.random().toString(36).substr(2, 9)
 }
 </script>
-
-<style>
-  .avatar {
-    display: flex;
-    justify-content: center;
-  }
-
-  .avatar img {
-    width: 150px;
-    height: auto;
-    border-radius: 50%;
-  }
-</style>
