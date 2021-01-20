@@ -4,7 +4,7 @@
         v-if="title"
         :contenteditable="isEditMode"
         :class="{'edit-mode': isEditMode}"
-        @input="inputTitle"
+        ref="title"
     >{{ title }}</h2>
     <div class="buttons-group">
       <app-button
@@ -32,7 +32,7 @@
         v-if="text"
         :contenteditable="isEditMode"
         :class="{'edit-mode': isEditMode}"
-        @input="inputText"
+        ref="text"
     >{{ text }}</p>
   </div>
 </template>
@@ -61,29 +61,31 @@ export default {
     }
   },
   methods: {
-    inputTitle(e) {
-      const value = e.target.innerText.trim()
-      if (value.length < 0) {
-        this.section.title = ' '
-      } else {
-        this.section.title = value
-      }
-    },
-    inputText(e) {
-      this.content.sections[this.sectionIdx].text = e.target.innerText.trim()
-    },
     toggleMode() {
+
       if (this.isEditMode) {
         this.updateData()
       }
       this.isEditMode = !this.isEditMode
     },
     updateData() {
-      const section = this.content.sections[this.sectionIdx]
-      if (section.hasOwnProperty('title') && !section.title.length) {
+      const section = this.section
+      let title, text
+
+      if (this.$refs.title) {
+        title = this.$refs.title.innerText.trim()
+        section.title = title
+      }
+
+      if (this.$refs.text) {
+        text = this.$refs.text.innerText.trim()
+        section.text = text
+      }
+
+      if (section.hasOwnProperty('title') && !title.length) {
         delete section.title
       }
-      if (section.hasOwnProperty('text') && !section.text.length) {
+      if (section.hasOwnProperty('text') && !text.length) {
         delete section.text
       }
       if (!section.hasOwnProperty('text') && !section.hasOwnProperty('title')) {
@@ -128,7 +130,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   @font-face {
     font-family: 'FaSolid';
     src: url('~@/assets/fa-solid-900.woff') format('woff');
@@ -174,12 +176,13 @@ export default {
     border: 2px solid rgba(66, 185, 131, 0);
   }
   .edit-mode {
-    border: 2px solid rgba(66, 185, 131, .25);
-    transition: border .25s;
+    border: 2px solid rgba(#e53935, .25);
+    background: rgba(#e53935, .15);
+    transition: border .25s, background-color .25s;
     border-radius: 5px;
   }
   .edit-mode:focus {
-    border: 2px solid rgba(66, 185, 131, 1);
+    border: 2px solid rgba(#e53935, 1);
     border-radius: 5px;
     outline: none;
   }

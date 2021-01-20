@@ -1,12 +1,14 @@
 <template>
-  <AppCommentsList
-      v-if="comments"
-      :comments-data="comments"
-  />
-  <AppLoader v-if="isLoading" />
-  <p v-if="!comments && !isLoading">
-    <app-button color="primary" @action="loadComments">Загрузить комментарии</app-button>
-  </p>
+  <div class="container">
+    <AppCommentsList
+        v-if="comments"
+        :comments-data="comments"
+    />
+    <AppLoader v-if="isLoading" />
+    <p v-if="!comments && !isLoading">
+      <app-button color="primary" @action="loadComments">Загрузить комментарии</app-button>
+    </p>
+  </div>
 </template>
 
 <script>

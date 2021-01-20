@@ -1,21 +1,16 @@
 <template>
   <div class="container column">
-    <AppForm
-        :input="inputValue"
-        :value-type="type"
-        @form="change"
-    />
+    <AppForm @form="change" />
     <AppContent />
   </div>
-  <div class="container">
-    <AppComments />
-  </div>
+  <AppComments />
 </template>
 
 <script>
 import AppForm from '@/AppForm'
 import AppContent from '@/AppContent'
 import AppComments from '@/AppComments'
+import { editContent } from './functions'
 
 export default {
   data() {
@@ -56,64 +51,9 @@ export default {
           this.content.link = value
           break
         default:
-          this.editContent(type, value)
+          editContent(type, value, this.content.sections)
           break
       }
-      this.inputValue = ''
-      this.type = 'title'
-    },
-    editContent(type, value) {
-      const sections = this.content.sections
-
-      if (canEdit(type)) {
-        editSection(type, value)
-      } else {
-        addSection(type, value)
-      }
-
-      function getEditableSection() {
-        const sectionIdx = sections.findIndex(item => !(item.hasOwnProperty('title') && item.hasOwnProperty('text')))
-        if (sectionIdx >= 0) {
-          return sections[sectionIdx]
-        }
-      }
-
-      function canEdit(type) {
-        const target = getEditableSection(sections)
-        if (target) {
-          const property = type === 'subtitle' ? 'title' : 'text'
-          return !target.hasOwnProperty(property)
-        } else {
-          return false
-        }
-      }
-
-      function editSection(type, value) {
-        const target = getEditableSection(sections)
-        switch(type) {
-          case 'subtitle':
-            target.title = value
-            break
-          case 'text':
-            target.text = value
-            break
-        }
-      }
-
-      function addSection(type, value) {
-        const newSection = {}
-        switch (type) {
-          case 'subtitle':
-            newSection.title = value
-            break
-          case 'text':
-            newSection.text = value
-            break
-        }
-        newSection.id = generateID()
-        sections.push(newSection)
-      }
-
     }
   },
   provide() {
@@ -122,9 +62,5 @@ export default {
     }
   },
   components: { AppForm, AppContent, AppComments }
-}
-
-function generateID() {
-  return Math.random().toString(36).substr(2, 9)
 }
 </script>

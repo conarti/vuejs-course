@@ -1,5 +1,5 @@
 <template>
-  <form class="card card-w30" @submit.prevent="$emit('form', value, type); updateForm()">
+  <form class="card card-w30" @submit.prevent="$emit('form', value, type); resetForm()">
 
     <div class="form-control">
       <label for="type">Тип блока</label>
@@ -44,21 +44,17 @@ import AppButton from '@/ui-components/AppButton'
 
 export default {
   emits: ['form'],
-  props: {
-    input: String,
-    valueType: String
-  },
   inject: ['content'],
   data() {
     return {
-      value: this.input,
-      type: this.valueType
+      value: '',
+      type: 'title'
     }
   },
   methods: {
-    updateForm() {
-      this.value = this.input
-      this.type = this.valueType
+    resetForm() {
+      this.value = ''
+      this.type = 'title'
     },
     deleteHeaderOrAvatar() {
       if (this.type === 'title') {
