@@ -9,6 +9,9 @@
 import TheNavbar from '@/components/TheNavbar'
 
 export default {
+  mounted() {
+    this.$store.dispatch('getTasks')
+  },
   components: { TheNavbar }
 }
 </script>

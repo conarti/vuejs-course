@@ -11,7 +11,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '@/views/New.vue')
   },
   {
-    path: '/task',
+    path: '/task/:id',
     component: () => import(/* webpackChunkName: "about" */ '@/views/Task.vue')
   }
 ]
