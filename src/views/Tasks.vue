@@ -1,5 +1,6 @@
 <template>
-  <h1 class="text-white center" v-if="!tasks.length">Задач пока нет</h1>
+  <AppLoader v-if="isLoad"/>
+  <h1 class="text-white center" v-else-if="!tasks.length">Задач пока нет</h1>
   <template v-else>
     <h3 class="text-white">Всего активных задач: {{ count }}</h3>
     <div class="card" v-for="task in tasks" :key="task.id">
@@ -25,16 +26,20 @@
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 import AppStatus from '@/components/AppStatus'
+import AppLoader from '@/components/AppLoader'
+import { useLoader } from '@/use/loader'
 
 export default {
-  components: { AppStatus },
   setup() {
     const store = useStore()
+    const { tasks, isLoad } = useLoader()
 
     return {
       count: computed(() => store.getters.activeCount),
-      tasks: computed(() => store.state.tasks)
+      tasks,
+      isLoad
     }
-  }
+  },
+  components: { AppStatus, AppLoader }
 }
 </script>

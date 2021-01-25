@@ -5,7 +5,7 @@
   <div class="card" v-else>
     <h2>{{ task.title }}</h2>
     <p><strong>Статус</strong>: <AppStatus :type="task.status" /></p>
-    <p><strong>Дедлайн</strong>: {{ task.deadline }}</p>
+    <p><strong>Дедлайн</strong>: {{ task.deadline.toLocaleDateString() }}</p>
     <p><strong>Описание</strong>: {{ task.text }}</p>
     <div>
       <button class="btn" @click="setStatus(id, 'pending')">Взять в работу</button>
